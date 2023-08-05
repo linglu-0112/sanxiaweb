@@ -4,9 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sanxia.data.Dao.DataDao">
     <!--数据插入数据库-->
-    <insert id="insertMuseumData" parameterType="List">
+    <insert id="insertSanxiaData" parameterType="List">
         INSERT IGNORE INTO sanxiaTable (envId, parentId, envName, envType, envTypeName, envCoverUrl)
-        <foreach collection="data" open="values" item="item" separator=",">
+        <foreach collection="sanxiaDataList" open="values" item="item" separator=",">
             (
             #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl}
             )

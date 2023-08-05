@@ -22,7 +22,7 @@ public class sanxiaDataController {
     }
 
     @RequestMapping("/insertMuseumData")
-    public String insertMuseumData(){
+    public String insertSanxiaData(){
         try{
             sds.insertSanxiaData();
             System.out.println("执行成功！");

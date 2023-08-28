@@ -1,6 +1,7 @@
 package com.sanxia.data.service;
 
 import com.sanxia.data.Dao.DataDao;
+import com.sanxia.data.pojo.EnvType;
 import com.sanxia.data.pojo.JsonBean;
 import com.sanxia.data.pojo.SanxiaData;
 import net.sf.json.JSONArray;
@@ -18,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 @Service
 @Component
@@ -25,6 +27,7 @@ import java.util.List;
 public class sanxiaDataServiceImpl implements sanxiaDataService{
     @Autowired
     private DataDao dd;
+
 
     @Override
     public void insertSanxiaData(){
@@ -42,6 +45,81 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
 
     }
 
+    public void insertEnvType(String table_name){
+        JsonBean jsonBean = new JsonBean();
+        String url = "http://111.207.242.123:10081/api/v1/iot/common/metaData";
+
+        try {
+            URL httpurl = new URL(url);
+            URLConnection urlConnection = httpurl.openConnection();
+            HttpURLConnection connection = null;
+            if (urlConnection instanceof HttpURLConnection)
+            {
+                connection = (HttpURLConnection) urlConnection;
+            }
+            else
+            {
+                System.out.println("输入urlַ");
+
+            }
+            connection.connect();
+
+            //数据存入缓存区
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream()));
+            String urlString = "";
+            String current;
+            while ((current = in.readLine()) != null)
+            {
+                urlString += current;
+            }
+            String str = "data";
+            JSONObject json = JSONObject.fromObject(urlString);
+            jsonBean.setMsg(json.optString("msg"));
+            jsonBean.setCode(json.optString("code"));
+            JSONObject data = json.getJSONObject("data");
+            Iterator<String> keys = data.keys();
+            List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
+            while (keys.hasNext()){
+                String key = keys.next();
+//                System.out.println(key);
+                JSONObject dataObj = data.optJSONObject(key);
+
+                JsonBean.DataBean dataBean = new JsonBean.DataBean();
+                dataBean.setEnvirDataUnit(dataObj.getString("envirDataUnit"));
+                dataBean.setEnvirParamName(dataObj.getString("envirParamName"));
+                dataBean.setEnvirParamCode(dataObj.getString("envirParamCode"));
+                dataBean.setEnvirParamType(dataObj.getString("envirParamType"));
+
+                dataBeanList.add(dataBean);
+            }
+            jsonBean.setData(dataBeanList);
+
+            List<EnvType> envTypeList = new ArrayList<>();
+            try{
+                for (int i = 0; i < jsonBean.getData().size(); i++) {
+
+                    EnvType envType = new EnvType();
+
+                    envType = envTypeInsert(jsonBean, i);
+
+                    envTypeList.add(envType);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("解析异常");
+            }
+            dd.insertEnvType(table_name,envTypeList);
+            System.out.println("获得envTypeList，执行成功");
+            System.out.println(envTypeList);
+
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 
 
     public JsonBean apiquery(String url) {
@@ -133,6 +211,15 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
         return sanxiadata;
     }
 
+    public static EnvType envTypeInsert(JsonBean jsonBean, int i){
+        EnvType envType = new EnvType();
+        envType.setEnvirDataUnit(jsonBean.getData().get(i).getEnvirDataUnit());
+        envType.setEnvirParamName(jsonBean.getData().get(i).getEnvirParamName());
+        envType.setEnvirParamCode(jsonBean.getData().get(i).getEnvirParamCode());
+        envType.setEnvirParamType(jsonBean.getData().get(i).getEnvirParamType());
+
+        return envType;
+    }
 
 
 }

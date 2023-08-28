@@ -3,12 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sanxia.data.Dao.DataDao">
-    <!--数据插入数据库-->
+    <!--三峡环境数据插入数据库-->
     <insert id="insertSanxiaData" parameterType="List">
-        INSERT IGNORE INTO sanxiaTable (envId, parentId, envName, envType, envTypeName, envCoverUrl)
+        INSERT IGNORE INTO sanxia_museum_levelInfor (envId, parentId, envName, envType, envTypeName, envCoverUrl)
         <foreach collection="sanxiaDataList" open="values" item="item" separator=",">
             (
             #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl}
+            )
+        </foreach>
+    </insert>
+    <!--三峡环境类型数据插入数据库-->
+    <insert id="insertEnvType" parameterType="List">
+        INSERT IGNORE INTO ${param1} (envirParamType,envirDataUnit,envirParamName,envirParamCode)
+        <foreach collection="envTypeList" open="values" item="item" separator=",">
+            (
+            #{item.envirParamType},#{item.envirDataUnit},#{item.envirParamName},#{item.envirParamCode}
             )
         </foreach>
     </insert>

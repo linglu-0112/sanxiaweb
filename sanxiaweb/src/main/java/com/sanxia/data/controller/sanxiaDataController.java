@@ -45,4 +45,15 @@ public class sanxiaDataController {
         return "输入envtype数据成功";
     }
 
+    @RequestMapping("/insertDevicelist/{TableName}")
+    public String insertDeviceList(@PathVariable String TableName){
+        try{
+            sds.insertDeviceList(TableName);
+            System.out.println("输入device列表数据成功");
+        }catch(Exception e)
+        {   e.printStackTrace();
+            return "error";}
+        return "输入device列表数据成功";
+    }
+
 }

@@ -21,6 +21,15 @@
             )
         </foreach>
     </insert>
+    <!--向三峡数据库插入所有设备列表-->
+    <insert id="insertDeviceList" parameterType="List">
+        INSERT IGNORE INTO ${param1} (envId,envName,deviceId,deviceName,deviceType,deviceTypeName,deviceFactory,collectTime,deviceRegisterTime,deviceStatus,envirParamType,envirDataUnit,envirParamName,envirParamCode)
+        <foreach collection="deviceList" open="values" item="item" separator=",">
+            (
+            #{item.envId},#{item.envName},#{item.deviceId},#{item.deviceName},#{item.deviceType},#{item.deviceTypeName},#{item.deviceFactory},#{item.collectTime},#{item.deviceRegisterTime},#{item.deviceStatus},#{item.envirParamType},#{item.envirDataUnit},#{item.envirParamName},#{item.envirParamCode}
+            )
+        </foreach>
+    </insert>
 
 
 </mapper>

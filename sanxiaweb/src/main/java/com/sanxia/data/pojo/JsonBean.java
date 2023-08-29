@@ -46,6 +46,86 @@ public class JsonBean {
 
         private String envirParamType;
 
+        private String deviceId;
+
+        private String deviceName;
+
+        private String deviceType;
+
+        private String deviceTypeName;
+
+        private String deviceFactory;
+
+        private String collectTime;
+
+        private String deviceRegisterTime;
+
+        private String deviceStatus;
+
+        public String getDeviceId() {
+            return deviceId;
+        }
+
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
+        }
+
+        public String getDeviceName() {
+            return deviceName;
+        }
+
+        public void setDeviceName(String deviceName) {
+            this.deviceName = deviceName;
+        }
+
+        public String getDeviceType() {
+            return deviceType;
+        }
+
+        public void setDeviceType(String deviceType) {
+            this.deviceType = deviceType;
+        }
+
+        public String getDeviceTypeName() {
+            return deviceTypeName;
+        }
+
+        public void setDeviceTypeName(String deviceTypeName) {
+            this.deviceTypeName = deviceTypeName;
+        }
+
+        public String getDeviceFactory() {
+            return deviceFactory;
+        }
+
+        public void setDeviceFactory(String deviceFactory) {
+            this.deviceFactory = deviceFactory;
+        }
+
+        public String getCollectTime() {
+            return collectTime;
+        }
+
+        public void setCollectTime(String collectTime) {
+            this.collectTime = collectTime;
+        }
+
+        public String getDeviceRegisterTime() {
+            return deviceRegisterTime;
+        }
+
+        public void setDeviceRegisterTime(String deviceRegisterTime) {
+            this.deviceRegisterTime = deviceRegisterTime;
+        }
+
+        public String getDeviceStatus() {
+            return deviceStatus;
+        }
+
+        public void setDeviceStatus(String deviceStatus) {
+            this.deviceStatus = deviceStatus;
+        }
+
         public String getEnvId() {
             return envId;
         }

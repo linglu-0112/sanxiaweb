@@ -1,6 +1,6 @@
 package com.sanxia.data.pojo;
 
-public class EnvType {
+public class EnvTypeMeta {
     private String envirDataUnit;
 
     private String envirParamName;

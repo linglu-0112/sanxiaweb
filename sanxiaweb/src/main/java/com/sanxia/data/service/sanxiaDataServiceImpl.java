@@ -1,7 +1,7 @@
 package com.sanxia.data.service;
 
 import com.sanxia.data.Dao.DataDao;
-import com.sanxia.data.pojo.EnvType;
+import com.sanxia.data.pojo.EnvTypeMeta;
 import com.sanxia.data.pojo.JsonBean;
 import com.sanxia.data.pojo.SanxiaData;
 import com.sanxia.data.pojo.deviceList;
@@ -98,11 +98,11 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
             }
             jsonBean.setData(dataBeanList);
 //          将dataBeanList添加到envTypeList,并送到Dao层
-            List<EnvType> envTypeList = new ArrayList<>();
+            List<EnvTypeMeta> envTypeList = new ArrayList<>();
             try{
                 for (int i = 0; i < jsonBean.getData().size(); i++) {
 
-                    EnvType envType = new EnvType();
+                    EnvTypeMeta envType = new EnvTypeMeta();
 
                     envType = envTypeInsert(jsonBean, i);
 
@@ -297,8 +297,8 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
         return sanxiadata;
     }
 
-    public static EnvType envTypeInsert(JsonBean jsonBean, int i){
-        EnvType envType = new EnvType();
+    public static EnvTypeMeta envTypeInsert(JsonBean jsonBean, int i){
+        EnvTypeMeta envType = new EnvTypeMeta();
         envType.setEnvirDataUnit(jsonBean.getData().get(i).getEnvirDataUnit());
         envType.setEnvirParamName(jsonBean.getData().get(i).getEnvirParamName());
         envType.setEnvirParamCode(jsonBean.getData().get(i).getEnvirParamCode());

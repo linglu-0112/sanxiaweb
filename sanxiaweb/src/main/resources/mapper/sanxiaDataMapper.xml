@@ -13,7 +13,7 @@
         </foreach>
     </insert>
     <!--三峡环境类型数据插入数据库-->
-    <insert id="insertEnvType" parameterType="List">
+    <insert id="insertEnvTypeMeta" parameterType="List">
         INSERT IGNORE INTO ${param1} (envirParamType,envirDataUnit,envirParamName,envirParamCode)
         <foreach collection="envTypeList" open="values" item="item" separator=",">
             (
@@ -29,6 +29,16 @@
             #{item.envId},#{item.envName},#{item.deviceId},#{item.deviceName},#{item.deviceType},#{item.deviceTypeName},#{item.deviceFactory},#{item.collectTime},#{item.deviceRegisterTime},#{item.deviceStatus},#{item.envirParamType},#{item.envirDataUnit},#{item.envirParamName},#{item.envirParamCode}
             )
         </foreach>
+    </insert>
+    <!--向三峡数据库插入环境类型数据-->
+    <insert id="insertEnvTypes" parameterType="List">
+        INSERT IGNORE INTO environmentTypes (envType,envTypeName)
+        <foreach collection="envTypes" open="values" item="item" separator=",">
+            (
+            #{item.envType},#{item.envTypeName}
+            )
+        </foreach>
+
     </insert>
 
 

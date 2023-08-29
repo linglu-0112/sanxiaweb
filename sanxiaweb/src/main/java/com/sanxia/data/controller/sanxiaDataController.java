@@ -37,7 +37,7 @@ public class sanxiaDataController {
     @RequestMapping("/insertEnvtypeMeta/{TableName}")
     public String insertEnvtype(@PathVariable String TableName){
         try{
-            sds.insertEnvType(TableName);
+            sds.insertEnvTypeMeta(TableName);
             System.out.println("输入envtype数据成功");
         }catch(Exception e)
         {   e.printStackTrace();
@@ -54,6 +54,17 @@ public class sanxiaDataController {
         {   e.printStackTrace();
             return "error";}
         return "输入device列表数据成功";
+    }
+
+    @RequestMapping("/insertEnvTypes")
+    public String insertEnvTypes(){
+        try{
+            sds.insertEnvTypes();
+            System.out.println("输入环境类型数据成功");
+        }catch(Exception e)
+        {   e.printStackTrace();
+            return "error";}
+        return "插入环境类型数据成功";
     }
 
 }

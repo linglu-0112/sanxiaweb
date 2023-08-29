@@ -4,7 +4,11 @@ public interface sanxiaDataService {
 
       void insertSanxiaData();
 
-      void insertEnvType(String Tablename);
+      void insertEnvTypeMeta(String Tablename);
 
       void insertDeviceList(String Tablename);
+
+      void insertEnvTypes();
+
+
 }

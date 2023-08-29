@@ -34,7 +34,7 @@ public class JsonBean {
         private String envId;
         private String parentId;
         private String envName;
-        private int envType;
+        private String envType;
         private String envTypeName;
         private String envCoverUrl;
 
@@ -150,11 +150,11 @@ public class JsonBean {
             this.envName = envName;
         }
 
-        public int getEnvType() {
+        public String getEnvType() {
             return envType;
         }
 
-        public void setEnvType(int envType) {
+        public void setEnvType(String envType) {
             this.envType = envType;
         }
 

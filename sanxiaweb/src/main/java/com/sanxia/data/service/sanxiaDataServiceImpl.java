@@ -1,10 +1,7 @@
 package com.sanxia.data.service;
 
 import com.sanxia.data.Dao.DataDao;
-import com.sanxia.data.pojo.EnvTypeMeta;
-import com.sanxia.data.pojo.JsonBean;
-import com.sanxia.data.pojo.SanxiaData;
-import com.sanxia.data.pojo.deviceList;
+import com.sanxia.data.pojo.*;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,101 +22,71 @@ import java.util.List;
 @Service
 @Component
 @Transactional
-public class sanxiaDataServiceImpl implements sanxiaDataService{
+public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
 
     @Override
-    public void insertSanxiaData(){
+    public void insertSanxiaData() {
         JsonBean jsonBean = new JsonBean();
         String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/findList?envId=";
         jsonBean = apiquery(url);
         List<SanxiaData> sanxiaDatalist = new ArrayList<>();
-        if (jsonBean.getData().size()!=0){
+        if (jsonBean.getData().size() != 0) {
             sanxiaDatalist = getdatalist(jsonBean);
             dd.insertSanxiaData(sanxiaDatalist);
             System.out.println("执行成功");
-        }else {
-            System.out.print( " 位置点无数据"+'\n');
+        } else {
+            System.out.print(" 位置点无数据" + '\n');
         }
 
     }
 
-    public void insertEnvType(String table_name){
+    public void insertEnvTypeMeta(String table_name) {
         JsonBean jsonBean = new JsonBean();
         String url = "http://111.207.242.123:10081/api/v1/iot/common/metaData";
-
-        try {
-            URL httpurl = new URL(url);
-            URLConnection urlConnection = httpurl.openConnection();
-            HttpURLConnection connection = null;
-            if (urlConnection instanceof HttpURLConnection)
-            {
-                connection = (HttpURLConnection) urlConnection;
-            }
-            else
-            {
-                System.out.println("输入urlַ");
-
-            }
-            connection.connect();
-
-            //数据存入缓存区
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
-            String urlString = "";
-            String current;
-            while ((current = in.readLine()) != null)
-            {
-                urlString += current;
-            }
-
-//          从url获取json数据
-            JSONObject json = JSONObject.fromObject(urlString);
-            jsonBean.setMsg(json.optString("msg"));
-            jsonBean.setCode(json.optString("code"));
-            JSONObject data = json.getJSONObject("data");
+        JSONObject json = new JSONObject();
+        json = fromurl(url);
+        jsonBean.setMsg(json.optString("msg"));
+        jsonBean.setCode(json.optString("code"));
+        JSONObject data = json.getJSONObject("data");
 //          解析json数据，获得dataBeanList
-            Iterator<String> keys = data.keys();
-            List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
-            while (keys.hasNext()){
-                String key = keys.next();
+        Iterator<String> keys = data.keys();
+        List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
+        while (keys.hasNext()) {
+            String key = keys.next();
 //                System.out.println(key);
-                JSONObject dataObj = data.optJSONObject(key);
+            JSONObject dataObj = data.optJSONObject(key);
 
-                JsonBean.DataBean dataBean = new JsonBean.DataBean();
-                dataBean.setEnvirDataUnit(dataObj.getString("envirDataUnit"));
-                dataBean.setEnvirParamName(dataObj.getString("envirParamName"));
-                dataBean.setEnvirParamCode(dataObj.getString("envirParamCode"));
-                dataBean.setEnvirParamType(dataObj.getString("envirParamType"));
+            JsonBean.DataBean dataBean = new JsonBean.DataBean();
+            dataBean.setEnvirDataUnit(dataObj.getString("envirDataUnit"));
+            dataBean.setEnvirParamName(dataObj.getString("envirParamName"));
+            dataBean.setEnvirParamCode(dataObj.getString("envirParamCode"));
+            dataBean.setEnvirParamType(dataObj.getString("envirParamType"));
 
-                dataBeanList.add(dataBean);
-            }
-            jsonBean.setData(dataBeanList);
-//          将dataBeanList添加到envTypeList,并送到Dao层
-            List<EnvTypeMeta> envTypeList = new ArrayList<>();
-            try{
-                for (int i = 0; i < jsonBean.getData().size(); i++) {
-
-                    EnvTypeMeta envType = new EnvTypeMeta();
-
-                    envType = envTypeInsert(jsonBean, i);
-
-                    envTypeList.add(envType);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("解析异常");
-            }
-            dd.insertEnvType(table_name,envTypeList);
-            System.out.println("获得envTypeList，执行成功");
-            System.out.println(envTypeList);
-
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            dataBeanList.add(dataBean);
         }
+        jsonBean.setData(dataBeanList);
+//          将dataBeanList添加到envTypeList,并送到Dao层
+        List<EnvTypeMeta> envTypeList = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonBean.getData().size(); i++) {
+
+                EnvTypeMeta envType = new EnvTypeMeta();
+
+                envType = envTypeInsert(jsonBean, i);
+
+                envTypeList.add(envType);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("解析异常");
+        }
+        dd.insertEnvTypeMeta(table_name, envTypeList);
+        System.out.println("获得envTypeList，执行成功");
+        System.out.println(envTypeList);
+
+
 
 
     }
@@ -129,6 +96,98 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
         JsonBean jsonBean = new JsonBean();
         String url = "http://111.207.242.123:10081/api/v1/iot/50010301/devices/findList";
 
+            //          从url获取json数据
+        JSONObject json = new JSONObject();
+        json = fromurl(url);
+        jsonBean.setMsg(json.optString("msg"));
+        jsonBean.setCode(json.optString("code"));
+        JSONArray dataArray = json.optJSONArray("data");
+        //          解析json数据，获得dataBeanList
+        List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
+        for (int i = 0; i < dataArray.size(); i++) {
+            JSONObject dataObj_i = dataArray.optJSONObject(i);
+            JSONObject data = dataObj_i.optJSONObject("deviceParamsVal");
+            Iterator<String> keys = data.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                JSONObject deviceParamObj = data.optJSONObject(key);
+                JsonBean.DataBean dataBean = new JsonBean.DataBean();
+                dataBean.setDeviceId(dataObj_i.getString("deviceId"));
+                dataBean.setDeviceName(dataObj_i.getString("deviceName"));
+                dataBean.setEnvId(dataObj_i.getString("envId"));
+                dataBean.setEnvName(dataObj_i.getString("envName"));
+                dataBean.setDeviceType(dataObj_i.getString("deviceType"));
+                dataBean.setDeviceTypeName(dataObj_i.getString("deviceTypeName"));
+                dataBean.setDeviceFactory(dataObj_i.getString("deviceFactory"));
+                dataBean.setDeviceRegisterTime(dataObj_i.getString("deviceRegisterTime"));
+                dataBean.setDeviceStatus(dataObj_i.getString("deviceStatus"));
+//                  deviceParamsVal中的字段赋值
+                dataBean.setCollectTime(deviceParamObj.getString("collectTime"));
+                dataBean.setEnvirDataUnit(deviceParamObj.getString("envirDataUnit"));
+                dataBean.setEnvirParamName(deviceParamObj.getString("envirParamName"));
+                dataBean.setEnvirParamCode(deviceParamObj.getString("envirParamCode"));
+                dataBean.setEnvirParamType(deviceParamObj.getString("envirParamType"));
+
+                dataBeanList.add(dataBean);
+            }
+        }
+        jsonBean.setData(dataBeanList);
+//            System.out.println(dataBeanList.size());
+//          将dataBeanList添加到envTypeList,并送到Dao层
+        List<deviceList> deviceList = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonBean.getData().size(); i++) {
+
+                deviceList deviceList_i = new deviceList();
+                deviceList_i = deviceListInsert(jsonBean, i);
+                deviceList.add(deviceList_i);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("解析异常");
+        }
+        dd.insertDeviceList(table_name, deviceList);
+        System.out.println("设备列表插入数据库！");
+
+    }
+
+    @Override
+    public void insertEnvTypes() {
+        JsonBean jsonBean = new JsonBean();
+        String url = "http://111.207.242.123:10081/api/v1/iot/common/envTypes";
+
+        JSONObject json = new JSONObject();
+        json = fromurl(url);
+        jsonBean.setMsg(json.optString("msg"));
+        jsonBean.setCode(json.optString("code"));
+        JSONObject data = json.getJSONObject("data");
+        Iterator<String> keys = data.keys();
+        List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            JsonBean.DataBean dataBean = new JsonBean.DataBean();
+            dataBean.setEnvTypeName(data.getString(key));
+            dataBean.setEnvType(key);
+            dataBeanList.add(dataBean);
+        }
+        jsonBean.setData(dataBeanList);
+//        System.out.println(dataBeanList.size()); 14条数据
+        List<EnvTypes> envTypesList = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonBean.getData().size(); i++) {
+
+                EnvTypes env_i = new EnvTypes();
+                env_i = envTypesInsert(jsonBean, i);
+                envTypesList.add(env_i);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("解析异常");
+        }
+        dd.insertEnvTypes(envTypesList);
+        System.out.println("环境类型插入数据库！");
+    }
+
+    public JSONObject fromurl(String url) {
+        JSONObject json;
         try {
             URL httpurl = new URL(url);
             URLConnection urlConnection = httpurl.openConnection();
@@ -137,7 +196,6 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
                 connection = (HttpURLConnection) urlConnection;
             } else {
                 System.out.println("输入urlַ");
-
             }
             connection.connect();
 
@@ -149,62 +207,16 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
             while ((current = in.readLine()) != null) {
                 urlString += current;
             }
-            //          从url获取json数据
-            JSONObject json = JSONObject.fromObject(urlString);
-            jsonBean.setMsg(json.optString("msg"));
-            jsonBean.setCode(json.optString("code"));
-            JSONArray dataArray = json.optJSONArray("data");
-            //          解析json数据，获得dataBeanList
-            List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
-            for (int i = 0; i < dataArray.size(); i++){
-                JSONObject dataObj_i = dataArray.optJSONObject(i);
-                JSONObject data = dataObj_i.optJSONObject("deviceParamsVal");
-                Iterator<String> keys = data.keys();
-                while (keys.hasNext()){
-                    String key = keys.next();
-                    JSONObject deviceParamObj = data.optJSONObject(key);
-                    JsonBean.DataBean dataBean = new JsonBean.DataBean();
-                    dataBean.setDeviceId(dataObj_i.getString("deviceId"));
-                    dataBean.setDeviceName(dataObj_i.getString("deviceName"));
-                    dataBean.setEnvId(dataObj_i.getString("envId"));
-                    dataBean.setEnvName(dataObj_i.getString("envName"));
-                    dataBean.setDeviceType(dataObj_i.getString("deviceType"));
-                    dataBean.setDeviceTypeName(dataObj_i.getString("deviceTypeName"));
-                    dataBean.setDeviceFactory(dataObj_i.getString("deviceFactory"));
-                    dataBean.setDeviceRegisterTime(dataObj_i.getString("deviceRegisterTime"));
-                    dataBean.setDeviceStatus(dataObj_i.getString("deviceStatus"));
 
-//                  deviceParamsVal中的字段赋值
-                    dataBean.setCollectTime(deviceParamObj.getString("collectTime"));
-                    dataBean.setEnvirDataUnit(deviceParamObj.getString("envirDataUnit"));
-                    dataBean.setEnvirParamName(deviceParamObj.getString("envirParamName"));
-                    dataBean.setEnvirParamCode(deviceParamObj.getString("envirParamCode"));
-                    dataBean.setEnvirParamType(deviceParamObj.getString("envirParamType"));
+            json = JSONObject.fromObject(urlString);
 
-                    dataBeanList.add(dataBean);
-                }
-            }
-            jsonBean.setData(dataBeanList);
-//            System.out.println(dataBeanList.size());
-//          将dataBeanList添加到envTypeList,并送到Dao层
-            List<deviceList> deviceList = new ArrayList<>();
-            try{
-                for (int i = 0; i < jsonBean.getData().size(); i++) {
-
-                    deviceList deviceList_i = new deviceList();
-                    deviceList_i = deviceListInsert(jsonBean, i);
-                    deviceList.add(deviceList_i);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("解析异常");
-            }
-            dd.insertDeviceList(table_name,deviceList);
-            System.out.println("设备列表插入数据库！");
-        }catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        return json;
     }
 
 
@@ -248,7 +260,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
                 dataBean.setEnvId(dataObj.getString("envId"));
                 dataBean.setParentId(dataObj.getString("parentId"));
                 dataBean.setEnvName(dataObj.getString("envName"));
-                dataBean.setEnvType(dataObj.getInt("envType"));
+                dataBean.setEnvType(dataObj.getString("envType"));
                 dataBean.setEnvTypeName(dataObj.getString("envTypeName"));
                 dataBean.setEnvCoverUrl(dataObj.getString("envCoverUrl"));
 
@@ -328,5 +340,12 @@ public class sanxiaDataServiceImpl implements sanxiaDataService{
         return devicelist;
     }
 
+    public static EnvTypes envTypesInsert(JsonBean jsonBean, int i){
+        EnvTypes env = new EnvTypes();
+        env.setEnvType(jsonBean.getData().get(i).getEnvType());
+        env.setEnvTypeName(jsonBean.getData().get(i).getEnvTypeName());
+
+        return env;
+    }
 
 }

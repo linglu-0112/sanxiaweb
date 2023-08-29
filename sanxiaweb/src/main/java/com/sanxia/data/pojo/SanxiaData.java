@@ -4,7 +4,7 @@ public class SanxiaData {
     private String envId;
     private String parentId;
     private String envName;
-    private int envType;
+    private String envType;
     private String envTypeName;
     private String envCoverUrl;
 
@@ -32,11 +32,11 @@ public class SanxiaData {
         this.envName = envName;
     }
 
-    public int getEnvType() {
+    public String getEnvType() {
         return envType;
     }
 
-    public void setEnvType(int envType) {
+    public void setEnvType(String envType) {
         this.envType = envType;
     }
 
@@ -56,7 +56,7 @@ public class SanxiaData {
         this.envCoverUrl = envCoverUrl;
     }
 
-    public void data(String envId, String parentId, String envName, int envType, String envTypeName,
+    public void data(String envId, String parentId, String envName, String envType, String envTypeName,
                 String envCoverUrl){
         this.envId = envId;
         this.parentId = parentId;

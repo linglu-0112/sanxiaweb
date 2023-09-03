@@ -26,6 +26,40 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
+    public void insertEnvData(String select_table){
+        List<SanxiaData> sData = dd.selectSanxia(select_table);
+        System.out.println(sData.size());
+        String s = sData.get(7).getEnvId();
+        System.out.println(s);
+        JsonBean jsonBean = new JsonBean();
+        String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/data?envId=";
+        JSONObject json = new JSONObject();
+        String Url = url + s;
+        json = fromurl(Url);
+        jsonBean.setMsg(json.optString("msg"));
+        jsonBean.setCode(json.optString("code"));
+        // 获取外层data
+        JSONObject dataobj = json.optJSONObject("data");
+        //获取内层data
+        JSONArray dataArray = dataobj.optJSONArray("data");
+        if(dataArray.size() == 0){
+            System.out.println("保存空间中的数据为空");
+        }else{
+            System.out.println("不为空");
+            // 根据dataArray的大小进行循环插入数据：
+            System.out.println(dataArray.size());
+            System.out.println(dataArray.optJSONObject(0)); //dataobj_i
+            System.out.println(dataArray.optJSONObject(0).optString("collectTime"));
+            System.out.println(dataobj.optString("envId"));
+
+            
+        }
+        
+        
+
+
+    }
+
 
     @Override
     public void insertSanxiaData() {
@@ -346,6 +380,21 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         env.setEnvTypeName(jsonBean.getData().get(i).getEnvTypeName());
 
         return env;
+    }
+
+    public static EnvData envDataInsert(JsonBean jsonBean, int i){
+        EnvData envData = new EnvData();
+        envData.setEnvId(jsonBean.getData().get(i).getEnvId());
+        envData.setEnvName(jsonBean.getData().get(i).getEnvName());
+        envData.setEnvType(jsonBean.getData().get(i).getEnvType());
+        envData.setEnvTypeName(jsonBean.getData().get(i).getEnvTypeName());
+        envData.setParentId(jsonBean.getData().get(i).getParentId());
+        envData.setEnvCoverUrl(jsonBean.getData().get(i).getEnvCoverUrl());
+        envData.setCollectTime(jsonBean.getData().get(i).getCollectTime());
+        envData.setEnvirParamType(jsonBean.getData().get(i).getEnvirParamType());
+        envData.setEnvirParamValue(jsonBean.getData().get(i).getEnvirParamValue());
+
+        return envData;
     }
 
 }

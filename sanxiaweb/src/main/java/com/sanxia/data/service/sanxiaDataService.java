@@ -10,5 +10,7 @@ public interface sanxiaDataService {
 
       void insertEnvTypes();
 
+      void insertEnvData(String select_table);
+
 
 }

@@ -67,4 +67,15 @@ public class sanxiaDataController {
         return "插入环境类型数据成功";
     }
 
+    @RequestMapping("/insertEnvData/{selectTable}")
+    public String insertEnvData(@PathVariable String selectTable){
+        try{
+            sds.insertEnvData(selectTable);
+            System.out.println("查询到保存环境空间表");
+        }catch(Exception e)
+        {   e.printStackTrace();
+            return "error";}
+        return "输入保存环境空间数据成功！";
+    }
+
 }

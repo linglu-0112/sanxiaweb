@@ -26,6 +26,14 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
+    public void insertEnvData(String select_table){
+        List<SanxiaData> sData = dd.selectSanxia(select_table);
+        System.out.println(sData.size());
+        System.out.println(sData.get(0).getEnvId());
+
+
+    }
+
 
     @Override
     public void insertSanxiaData() {

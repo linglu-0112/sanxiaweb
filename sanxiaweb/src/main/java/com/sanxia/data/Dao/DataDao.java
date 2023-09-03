@@ -18,4 +18,6 @@ public interface DataDao {
     public void insertDeviceList(@Param("table_name") String table_name,@Param("deviceList") List<deviceList> deviceList);
 
     public void insertEnvTypes(@Param("envTypes") List<EnvTypes> envTypesList);
+
+    public List<SanxiaData> selectSanxia(@Param("table_name") String table_name); 
 }

@@ -46,6 +46,8 @@ public class JsonBean {
 
         private String envirParamType;
 
+        private String envirParamValue;
+
         private String deviceId;
 
         private String deviceName;
@@ -189,5 +191,9 @@ public class JsonBean {
         public String getEnvirParamType(){return envirParamType;}
 
         public void setEnvirParamType(String envirParamType) {this.envirParamType = envirParamType;}
+
+        public String getEnvirParamValue() {return envirParamValue;}
+
+        public void setEnvirParamValue(String envirParamValue) {this.envirParamValue = envirParamValue;}
     }
 }

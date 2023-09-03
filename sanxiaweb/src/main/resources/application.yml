@@ -1,0 +1,17 @@
+#配置数据源信息
+spring:
+  datasource:
+    # type: com.alibaba.druid.pool.DruidDataSource #数据源类型
+    driver-class-name: com.mysql.cj.jdbc.Driver #驱动名称
+    url: jdbc:mysql://123.60.177.28:3306/sanxiamuseum?serverTimezone=GMT%2B8 #URL链接
+    username: root
+    password: dell901@
+  mvc: #配置jsp映射路径  return "index"    /index.jsp
+    view:
+      prefix: /
+      suffix: .jsp
+    servlet:
+      load-on-startup: 1
+mybatis:
+  type-aliases-package: com.sanxia.data.pojo  #配置mybatis类别名
+  mapper-locations: classpath:/mapper/*Mapper.xml #配置mapper映射文件路径

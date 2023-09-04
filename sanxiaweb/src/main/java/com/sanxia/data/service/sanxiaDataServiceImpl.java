@@ -26,38 +26,62 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
-    public void insertEnvData(String select_table){
+    public void insertEnvData(String select_table, String table_name){
         List<SanxiaData> sData = dd.selectSanxia(select_table);
-        System.out.println(sData.size());
-        String s = sData.get(7).getEnvId();
-        System.out.println(s);
         JsonBean jsonBean = new JsonBean();
-        String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/data?envId=";
-        JSONObject json = new JSONObject();
-        String Url = url + s;
-        json = fromurl(Url);
-        jsonBean.setMsg(json.optString("msg"));
-        jsonBean.setCode(json.optString("code"));
-        // 获取外层data
-        JSONObject dataobj = json.optJSONObject("data");
-        //获取内层data
-        JSONArray dataArray = dataobj.optJSONArray("data");
-        if(dataArray.size() == 0){
-            System.out.println("保存空间中的数据为空");
-        }else{
-            System.out.println("不为空");
-            // 根据dataArray的大小进行循环插入数据：
-            System.out.println(dataArray.size());
-            System.out.println(dataArray.optJSONObject(0)); //dataobj_i
-            System.out.println(dataArray.optJSONObject(0).optString("collectTime"));
-            System.out.println(dataobj.optString("envId"));
+        List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
+        for (int i = 0; i < sData.size(); i++){
+            String s = sData.get(i).getEnvId();
+//            System.out.println(s);
+            String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/data?envId=";
+            JSONObject json = new JSONObject();
+            String Url = url + s;
+            json = fromurl(Url);
+            jsonBean.setMsg(json.optString("msg"));
+            jsonBean.setCode(json.optString("code"));
+            // 获取外层data
+            JSONObject dataobj = json.optJSONObject("data");
+            //获取内层data
+            JSONArray dataArray = dataobj.optJSONArray("data");
+            if(dataArray.size() == 0){
+                System.out.println("保存空间中的数据为空");
+            }else{
+                System.out.println("保存空间中的数据不为空");
+                // 根据dataArray的大小进行循环插入数据：
+                for (int j = 0; j < dataArray.size(); j++){
+                    JsonBean.DataBean dataBean = new JsonBean.DataBean();
+                    JSONObject dataobj_i = dataArray.optJSONObject(j);
+                    dataBean.setEnvId(dataobj.optString("envId"));
+                    dataBean.setParentId(dataobj.optString("parentId"));
+                    dataBean.setEnvName(dataobj.optString("envName"));
+                    dataBean.setEnvType(dataobj.optString("envType"));
+                    dataBean.setEnvTypeName(dataobj.optString("envTypeName"));
+                    dataBean.setEnvCoverUrl(dataobj.optString("envCoverUrl"));
+                    dataBean.setCollectTime(dataobj_i.optString("collectTime"));
+                    dataBean.setEnvirParamType(dataobj_i.optString("envirParamType"));
+                    dataBean.setEnvirParamValue(dataobj_i.optString("envirParamValue")) ;
 
-            
+                    dataBeanList.add(dataBean);
+                }
+            }
         }
-        
-        
+        jsonBean.setData(dataBeanList);
+//        System.out.println(jsonBean.getData().size());
+        List<EnvData> envDataList = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonBean.getData().size(); i++) {
 
+                EnvData envData = new EnvData();
 
+                envData = envDataInsert(jsonBean, i);
+
+                envDataList.add(envData);
+            }
+            System.out.println("数据插入到envDataList中,一共"+envDataList.size()+"条数据");
+            dd.insertEnvData(table_name,envDataList);
+        } catch (Exception e) {
+            throw new RuntimeException("解析异常");
+        }
     }
 
 
@@ -119,8 +143,6 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         dd.insertEnvTypeMeta(table_name, envTypeList);
         System.out.println("获得envTypeList，执行成功");
         System.out.println(envTypeList);
-
-
 
 
     }
@@ -378,7 +400,6 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         EnvTypes env = new EnvTypes();
         env.setEnvType(jsonBean.getData().get(i).getEnvType());
         env.setEnvTypeName(jsonBean.getData().get(i).getEnvTypeName());
-
         return env;
     }
 

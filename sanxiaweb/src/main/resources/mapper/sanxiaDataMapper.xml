@@ -7,7 +7,7 @@
     <select id="selectSanxia" resultType="com.sanxia.data.pojo.SanxiaData">
         SELECT DISTINCT envId, parentId, envName, envType, envTypeName, envCoverUrl FROM ${param1} where envId is not null
     </select>
-    <!--三峡环境数据插入数据库-->
+    <!--三峡保存空间数据插入数据库-->
     <insert id="insertSanxiaData" parameterType="List">
         INSERT IGNORE INTO sanxia_museum_levelInfor (envId, parentId, envName, envType, envTypeName, envCoverUrl)
         <foreach collection="sanxiaDataList" open="values" item="item" separator=",">
@@ -16,7 +16,7 @@
             )
         </foreach>
     </insert>
-    <!--三峡环境类型数据插入数据库-->
+    <!--三峡环境因子数据插入数据库-->
     <insert id="insertEnvTypeMeta" parameterType="List">
         INSERT IGNORE INTO ${param1} (envirParamType,envirDataUnit,envirParamName,envirParamCode)
         <foreach collection="envTypeList" open="values" item="item" separator=",">
@@ -44,6 +44,14 @@
         </foreach>
 
     </insert>
-
+    <!--三峡保存空间内的环境数据插入数据库-->
+    <insert id="insertEnvData" parameterType="List">
+        INSERT IGNORE INTO ${param1} (envId, parentId, envName, envType, envTypeName, envCoverUrl,collectTime,envirParamType,envirParamValue)
+        <foreach collection="envData" open="values" item="item" separator=",">
+            (
+            #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl},#{item.collectTime},#{item.envirParamType},#{item.envirParamValue}
+            )
+        </foreach>
+    </insert>
 
 </mapper>

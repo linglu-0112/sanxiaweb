@@ -1,9 +1,6 @@
 package com.sanxia.data.Dao;
 
-import com.sanxia.data.pojo.EnvTypeMeta;
-import com.sanxia.data.pojo.EnvTypes;
-import com.sanxia.data.pojo.SanxiaData;
-import com.sanxia.data.pojo.deviceList;
+import com.sanxia.data.pojo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,6 +15,8 @@ public interface DataDao {
     public void insertDeviceList(@Param("table_name") String table_name,@Param("deviceList") List<deviceList> deviceList);
 
     public void insertEnvTypes(@Param("envTypes") List<EnvTypes> envTypesList);
+
+    public void insertEnvData(@Param("table_name") String table_name, @Param("envData")List<EnvData> envDataList);
 
     public List<SanxiaData> selectSanxia(@Param("table_name") String table_name); 
 }

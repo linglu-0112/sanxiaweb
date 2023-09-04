@@ -53,5 +53,15 @@
             )
         </foreach>
     </insert>
+    <!--按时间向三峡数据库插入保存空间内的环境数据-->
+    <insert id="insertEnvDataBytime" parameterType="List">
+    INSERT IGNORE INTO ${param1} (envId, parentId, envName, envType, envTypeName, envCoverUrl,collectTime,envirParamType,envirParamValue)
+    <foreach collection="envData" open="values" item="item" separator=",">
+        (
+        #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl},#{item.collectTime},#{item.envirParamType},#{item.envirParamValue}
+        )
+    </foreach>
+</insert>
+
 
 </mapper>

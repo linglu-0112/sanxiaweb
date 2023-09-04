@@ -71,7 +71,18 @@ public class sanxiaDataController {
     public String insertEnvData(@PathVariable String selectTable,@PathVariable String table_name){
         try{
             sds.insertEnvData(selectTable,table_name);
-            System.out.println("查询到保存环境空间表");
+
+        }catch(Exception e)
+        {   e.printStackTrace();
+            return "error";}
+        return "输入保存环境空间数据成功！";
+    }
+
+    @RequestMapping("/insertEnvDataBytime/{selectTable}/{table_name}")
+    public String insertEnvDataBytime(@PathVariable String selectTable,@PathVariable String table_name){
+        try{
+            sds.insertEnvDataBytime(selectTable,table_name);
+
         }catch(Exception e)
         {   e.printStackTrace();
             return "error";}

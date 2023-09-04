@@ -18,5 +18,7 @@ public interface DataDao {
 
     public void insertEnvData(@Param("table_name") String table_name, @Param("envData")List<EnvData> envDataList);
 
+    public void insertEnvDataBytime(@Param("table_name") String table_name, @Param("envData")List<EnvData> envDataList);
+
     public List<SanxiaData> selectSanxia(@Param("table_name") String table_name); 
 }

@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 @Service
@@ -26,6 +26,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
+    @Override
     public void insertEnvData(String select_table, String table_name){
         List<SanxiaData> sData = dd.selectSanxia(select_table);
         JsonBean jsonBean = new JsonBean();
@@ -82,6 +83,72 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         } catch (Exception e) {
             throw new RuntimeException("解析异常");
         }
+    }
+    @Override
+    public void insertEnvDataBytime(String select_table, String table_name) throws UnsupportedEncodingException {
+        List<SanxiaData> sData = dd.selectSanxia(select_table);
+        JsonBean jsonBean = new JsonBean();
+        List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
+        // 拼接url，需要计算开始和结束时间（过去一天的零点和24点）
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sj = new SimpleDateFormat("yyyy-MM-dd");
+        calendar.add(Calendar.DATE, -1); //当前时间减去一天，即一天前的时间
+        String str = sj.format(calendar.getTime());
+        String startTime = str + URLEncoder.encode(" ", "utf-8") + "01:00:00";  // 空格需要编码才能识别
+        System.out.print(startTime+'\n');
+        for (int i = 0; i < sData.size(); i++){
+            String s = sData.get(i).getEnvId();
+//            System.out.println(s);
+            String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/data?envId=";
+            JSONObject json = new JSONObject();
+            String Url = url + s + "&startDateTime=" + startTime;
+            json = fromurl(Url);
+            jsonBean.setMsg(json.optString("msg"));
+            jsonBean.setCode(json.optString("code"));
+            // 获取外层data
+            JSONObject dataobj = json.optJSONObject("data");
+            //获取内层data
+            JSONArray dataArray = dataobj.optJSONArray("data");
+            if(dataArray.size() == 0){
+                System.out.println("保存空间中的数据为空");
+            }else{
+                System.out.println("保存空间中的数据不为空");
+                // 根据dataArray的大小进行循环插入数据：
+                for (int j = 0; j < dataArray.size(); j++){
+                    JsonBean.DataBean dataBean = new JsonBean.DataBean();
+                    JSONObject dataobj_i = dataArray.optJSONObject(j);
+                    dataBean.setEnvId(dataobj.optString("envId"));
+                    dataBean.setParentId(dataobj.optString("parentId"));
+                    dataBean.setEnvName(dataobj.optString("envName"));
+                    dataBean.setEnvType(dataobj.optString("envType"));
+                    dataBean.setEnvTypeName(dataobj.optString("envTypeName"));
+                    dataBean.setEnvCoverUrl(dataobj.optString("envCoverUrl"));
+                    dataBean.setCollectTime(dataobj_i.optString("collectTime"));
+                    dataBean.setEnvirParamType(dataobj_i.optString("envirParamType"));
+                    dataBean.setEnvirParamValue(dataobj_i.optString("envirParamValue")) ;
+
+                    dataBeanList.add(dataBean);
+                }
+            }
+        }
+        jsonBean.setData(dataBeanList);
+//        System.out.println(jsonBean.getData().size());
+        List<EnvData> envDataList = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonBean.getData().size(); i++) {
+
+                EnvData envData = new EnvData();
+
+                envData = envDataInsert(jsonBean, i);
+
+                envDataList.add(envData);
+            }
+            System.out.println("数据插入到envDataList中,一共"+envDataList.size()+"条数据");
+            dd.insertEnvDataBytime(table_name,envDataList);
+        } catch (Exception e) {
+            throw new RuntimeException("解析异常");
+        }
+
     }
 
 

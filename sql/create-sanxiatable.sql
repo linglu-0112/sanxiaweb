@@ -1,0 +1,11 @@
+-- Active: 1690463718001@@123.60.177.28@3306@sanxiamuseum
+CREATE TABLE table1(  
+    id MEDIUMINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    envId VARCHAR(20),
+    envName VARCHAR(20),
+    parentId VARCHAR(20),
+    envType VARCHAR(20),
+    envTypeName VARCHAR(20),
+    envCoverUrl VARCHAR(20)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+CREATE INDEX id_1 on table1(id);

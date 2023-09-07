@@ -55,12 +55,20 @@
     </insert>
     <!--按时间向三峡数据库插入保存空间内的环境数据-->
     <insert id="insertEnvDataBytime" parameterType="List">
-    INSERT IGNORE INTO ${param1} (envId, parentId, envName, envType, envTypeName, envCoverUrl,collectTime,envirParamType,envirParamValue)
-    <foreach collection="envData" open="values" item="item" separator=",">
-        (
-        #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl},#{item.collectTime},#{item.envirParamType},#{item.envirParamValue}
-        )
-    </foreach>
+        INSERT IGNORE INTO ${param1} (envId, parentId, envName, envType, envTypeName, envCoverUrl,collectTime,envirParamType,envirParamValue)
+        <foreach collection="envData" open="values" item="item" separator=",">
+            (
+            #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl},#{item.collectTime},#{item.envirParamType},#{item.envirParamValue}
+            )
+        </foreach>
+    <!-- 向数据库插入保存空间中的文物列表 -->
+    <insert id='insertRelicList' parameterType="List">
+        INSERT IGNORE INTO ${param1} (relicId,updateDate,museumName,relicCode,relicName,relicYears,relicLevel,relicTexture,relicState,relicImage)
+        <foreach collection="relicList" open="values" item="item" separator=",">
+            (
+            #{item.relicId},#{item.updateDate},#{item.museumName},#{item.relicCode},#{item.relicName},#{item.relicYears},#{item.relicLevel},#{item.relicTexture},#{item.relicState},#{item.relicImage}
+            )
+        </foreach>
 </insert>
 
 

@@ -16,5 +16,7 @@ public interface sanxiaDataService {
 
       void insertEnvDataBytime(String select_table, String table_name) throws UnsupportedEncodingException;
 
+      void insertRelicData(String envId, String table_name);
+
 
 }

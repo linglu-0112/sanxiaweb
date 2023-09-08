@@ -20,7 +20,9 @@ public interface DataDao {
 
     public void insertEnvDataBytime(@Param("table_name") String table_name, @Param("envData")List<EnvData> envDataList);
 
-    public List<SanxiaData> selectSanxia(@Param("table_name") String table_name); 
+    public List<SanxiaData> selectSanxia(@Param("table_name") String table_name);
+
+    public List<envLevel> selectEnvLevel(@Param("table_name") String table_name,@Param("envId") String envId);
 
     public void insertRelicList(@Param("table_name") String table_name,@Param("relicList") List<RelicList> relicList);
 }

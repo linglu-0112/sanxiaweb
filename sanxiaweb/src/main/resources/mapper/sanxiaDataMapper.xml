@@ -7,6 +7,11 @@
     <select id="selectSanxia" resultType="com.sanxia.data.pojo.SanxiaData">
         SELECT DISTINCT envId, parentId, envName, envType, envTypeName, envCoverUrl FROM ${param1} where envId is not null
     </select>
+    <!-- 按照envId查询  -->
+    <select id="selectEnvLevel" resultType="com.sanxia.data.pojo.envLevel">
+        SELECT DISTINCT envId, envName, envType FROM ${param1} where envId=${param2}
+    </select>
+
     <!--三峡保存空间数据插入数据库-->
     <insert id="insertSanxiaData" parameterType="List">
         INSERT IGNORE INTO sanxia_museum_levelInfor (envId, parentId, envName, envType, envTypeName, envCoverUrl)
@@ -61,15 +66,15 @@
             #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl},#{item.collectTime},#{item.envirParamType},#{item.envirParamValue}
             )
         </foreach>
+    </insert>
     <!-- 向数据库插入保存空间中的文物列表 -->
     <insert id='insertRelicList' parameterType="List">
-        INSERT IGNORE INTO ${param1} (relicId,updateDate,museumName,relicCode,relicName,relicYears,relicLevel,relicTexture,relicState,relicImage)
+        INSERT IGNORE INTO ${param1} (envId,envName,envType,relicId,updateDate,museumName,relicCode,relicName,relicYears,relicLevel,relicTexture,relicState,relicImage)
         <foreach collection="relicList" open="values" item="item" separator=",">
             (
-            #{item.relicId},#{item.updateDate},#{item.museumName},#{item.relicCode},#{item.relicName},#{item.relicYears},#{item.relicLevel},#{item.relicTexture},#{item.relicState},#{item.relicImage}
+            #{item.envId},#{item.envName},#{item.envType},#{item.relicId},#{item.updateDate},#{item.museumName},#{item.relicCode},#{item.relicName},#{item.relicYears},#{item.relicLevel},#{item.relicTexture},#{item.relicState},#{item.relicImage}
             )
         </foreach>
-</insert>
-
+    </insert>
 
 </mapper>

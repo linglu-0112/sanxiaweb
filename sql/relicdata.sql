@@ -1,8 +1,10 @@
--- Active: 1691725592907@@123.60.177.28@3306@sanxiamuseum
-/* relicId,updateDate,museumName,relicCode,relicName,relicYears,relicLevel,relicTexture,relicState,relicImage */
+-- Active: 1690463718001@@123.60.177.28@3306@sanxiamuseum
 drop table if exists RelicData;
 CREATE TABLE RelicData(  
-    id MEDIUMINT AUTO_INCREMENT NOT NULL PRIMARY KEY,    create_time DATETIME COMMENT 'Create Time',
+    id MEDIUMINT AUTO_INCREMENT NOT NULL PRIMARY KEY,  
+    envId VARCHAR(255) COMMENT 'envId',
+    envType VARCHAR(255) COMMENT "envType",
+    envName VARCHAR(255) COMMENT 'envName',
     relicId VARCHAR(255) COMMENT 'Relic ID',
     updateDate VARCHAR(255) COMMENT 'Update Date',
     museumName VARCHAR(255) COMMENT 'Museum Name',

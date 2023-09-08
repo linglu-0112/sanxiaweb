@@ -151,6 +151,62 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
 
     }
 
+    @Override
+    public void insertRelicData(String envId, String table_name) {
+        String table = "sanxia_museum_levelInfor";
+        List<envLevel> envLevels = dd.selectEnvLevel(table,envId);
+        JsonBean jsonBean = new JsonBean();
+        List<JsonBean.DataBean> dataBeanList = new ArrayList<>();
+        String url = "http://111.207.242.123:9888/collection-plus/relicUnit/findList?page=1&size=10&envId=";
+        String Url = url + envId;
+        JSONObject json = new JSONObject();
+        json = fromurl(Url);
+        jsonBean.setMsg(json.optString("msg"));
+        jsonBean.setCode(json.optString("code"));
+        JSONObject data = json.optJSONObject("data");
+        JSONArray dataArray = data.optJSONArray("relicUnitList");
+        for(int i = 0; i < dataArray.size(); i++){
+            JsonBean.DataBean dataBean = new JsonBean.DataBean();
+            JSONObject data_i = dataArray.optJSONObject(i);
+            dataBean.setRelicId(data_i.getString("relicId"));
+            dataBean.setUpdateDate(data_i.getString("updateDate"));
+            dataBean.setMuseumName(data_i.getString("museumName"));
+            dataBean.setRelicCode(data_i.getString("relicCode"));
+            dataBean.setRelicName(data_i.getString("relicName"));
+            dataBean.setRelicYears(data_i.getString("relicYears"));
+            dataBean.setRelicLevel(data_i.getString("relicLevel"));
+            dataBean.setRelicTexture(data_i.getString("relicTexture"));
+            dataBean.setRelicState(data_i.getString("relicState"));
+            dataBean.setRelicImage(data_i.getString("relicImage"));
+            dataBean.setEnvId(envLevels.get(0).getEnvId());
+            dataBean.setEnvName(envLevels.get(0).getEnvName());
+            dataBean.setEnvType(envLevels.get(0).getEnvType());
+
+            dataBeanList.add(dataBean);
+
+        }
+        jsonBean.setData(dataBeanList);
+//        System.out.println(jsonBean.getData().size());
+//        System.out.println(jsonBean.getData().get(0).getRelicId());
+        List<RelicList> relicLists = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonBean.getData().size(); i++) {
+
+                RelicList relicData = new RelicList();
+
+                relicData = RelicDataInsert(jsonBean,i);
+
+                relicLists.add(relicData);
+            }
+            System.out.println("数据插入到envDataList中,一共"+relicLists.size()+"条数据");
+            dd.insertRelicList(table_name,relicLists);
+        } catch (Exception e) {
+            throw new RuntimeException("解析异常");
+        }
+
+
+    }
+
 
     @Override
     public void insertSanxiaData() {
@@ -483,6 +539,24 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         envData.setEnvirParamValue(jsonBean.getData().get(i).getEnvirParamValue());
 
         return envData;
+    }
+    public static RelicList RelicDataInsert(JsonBean jsonBean, int i){
+        RelicList relicList = new RelicList();
+        relicList.setEnvId(jsonBean.getData().get(i).getEnvId());
+        relicList.setEnvName(jsonBean.getData().get(i).getEnvName());
+        relicList.setEnvType(jsonBean.getData().get(i).getEnvType());
+        relicList.setRelicId(jsonBean.getData().get(i).getRelicId());
+        relicList.setUpdateDate(jsonBean.getData().get(i).getUpdateDate());
+        relicList.setMuseumName(jsonBean.getData().get(i).getMuseumName());
+        relicList.setRelicCode(jsonBean.getData().get(i).getRelicCode());
+        relicList.setRelicName(jsonBean.getData().get(i).getRelicName());
+        relicList.setRelicYears(jsonBean.getData().get(i).getRelicYears());
+        relicList.setRelicLevel(jsonBean.getData().get(i).getRelicLevel());
+        relicList.setRelicTexture(jsonBean.getData().get(i).getRelicTexture());
+        relicList.setRelicState(jsonBean.getData().get(i).getRelicState());
+        relicList.setRelicImage(jsonBean.getData().get(i).getRelicImage());
+
+        return relicList;
     }
 
 }

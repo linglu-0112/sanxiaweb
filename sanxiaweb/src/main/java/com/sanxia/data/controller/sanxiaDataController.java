@@ -88,5 +88,14 @@ public class sanxiaDataController {
             return "error";}
         return "输入保存环境空间数据成功！";
     }
+    @RequestMapping("/insertRelicData/{table_name}/{envId}")
+    public String insertRelicData(@PathVariable String table_name,@PathVariable String envId){
+        try{
+            sds.insertRelicData(envId,table_name);
+        }catch(Exception e)
+        {   e.printStackTrace();
+            return "error";}
+        return "输入文物数据成功";
+    }
 
 }

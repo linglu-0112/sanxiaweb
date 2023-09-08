@@ -1,6 +1,12 @@
 package com.sanxia.data.pojo;
 
 public class RelicList {
+    private String envId;
+
+    private String envName;
+
+    private String envType;
+
     private String relicId;
 
     private String updateDate;
@@ -20,6 +26,31 @@ public class RelicList {
     private String relicState;
 
     private String relicImage;
+
+    public String getEnvId() {
+        return envId;
+    }
+
+    public void setEnvId(String envId) {
+        this.envId = envId;
+    }
+
+    public String getEnvName() {
+        return envName;
+    }
+
+    public void setEnvName(String envName) {
+        this.envName = envName;
+    }
+
+    public String getEnvType() {
+        return envType;
+    }
+
+    public void setEnvType(String envType) {
+        this.envType = envType;
+    }
+
 
     public String getRelicId() {
         return relicId;

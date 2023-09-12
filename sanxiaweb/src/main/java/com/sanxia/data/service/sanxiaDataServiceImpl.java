@@ -56,16 +56,12 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         }
         sxData.setData(SxDataBean);
         List<insertSXData> sxDataList = new ArrayList<>();
-        try {
-            for(int i = 0; i < sxData.getData().size(); i++){
+        for(int i = 0; i < sxData.getData().size(); i++){
                 insertSXData sxData_i = new insertSXData();
                 sxData_i = sxDataInsert(sxData,i);
                 sxDataList.add(sxData_i);
             }
             dd.insertSanxiaData(table_name, sxDataList);
-        } catch (Exception e) {
-            throw new RuntimeException("解析异常");
-        }
     
     }
 

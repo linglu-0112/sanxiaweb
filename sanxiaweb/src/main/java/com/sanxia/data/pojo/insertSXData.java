@@ -9,7 +9,7 @@ public class insertSXData {
     private String envType;
     private String envTypeName;
     private String envCoverUrl;
-    private String timestmaps;
+    private String timestamps;
     private String sensorPhysicalID;
     private String sensorPhysicalValue;
     private String units;
@@ -51,10 +51,10 @@ public class insertSXData {
         this.envCoverUrl = envCoverUrl;
     }
     public String getTimestmaps() {
-        return timestmaps;
+        return timestamps;
     }
-    public void setTimestmaps(String timestmaps) {
-        this.timestmaps = timestmaps;
+    public void setTimestmaps(String timestamps) {
+        this.timestamps = timestamps;
     }
     public String getSensorPhysicalID() {
         return sensorPhysicalID;

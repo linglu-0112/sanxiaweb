@@ -23,9 +23,9 @@ public class sanxiaDataController {
     }
 
     @RequestMapping("/insertMuseumData")
-    public String insertSanxiaData(){
+    public String insertEnv(){
         try{
-            sds.insertSanxiaData();
+            sds.insertEnv();
             System.out.println("执行成功！");
         }catch(Exception e)
         {   e.printStackTrace();
@@ -96,6 +96,15 @@ public class sanxiaDataController {
         {   e.printStackTrace();
             return "error";}
         return "输入文物数据成功";
+    }
+    @RequestMapping("/insertSanxiaData/{selectTable}/{table_name}")
+    public String insertSanxiaData(@PathVariable String selectTable,@PathVariable String table_name){
+        try{
+            sds.insertSanxiaData(selectTable,table_name);
+        }catch(Exception e)
+        {   e.printStackTrace();
+            return "error";}
+        return "输入三峡数据成功";
     }
 
 }

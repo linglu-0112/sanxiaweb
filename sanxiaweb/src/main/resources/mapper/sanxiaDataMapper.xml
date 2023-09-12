@@ -3,6 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sanxia.data.Dao.DataDao">
+    <!-- 查询保存环境温湿度数据 -->
+    <select id="selecEnvData" resultType="com.sanxia.data.pojo.EnvData">
+        SELECT DISTINCT envId, parentId, envName, envType, envTypeName, envCoverUrl,collectTime,envirParamType,envirParamValue FROM ${param1}
+    </select> 
     <!-- 查询保存环境列表 -->
     <select id="selectSanxia" resultType="com.sanxia.data.pojo.SanxiaData">
         SELECT DISTINCT envId, parentId, envName, envType, envTypeName, envCoverUrl FROM ${param1} where envId is not null
@@ -11,9 +15,18 @@
     <select id="selectEnvLevel" resultType="com.sanxia.data.pojo.envLevel">
         SELECT DISTINCT envId, envName, envType FROM ${param1} where envId=${param2}
     </select>
+    <!-- 插入Sanxia_Data表 -->
+    <insert id="insertSanxiaData" parameterType="List">
+        INSERT IGNORE INTO ${param1} (locationID,parentId,locationName,envType,envTypeName,envCoverUrl, sensorPhysicalID, cnName, units, sensorPhysicalValue, timestamps)
+        <foreach collection="sxDataList" open="values" item="item" separator=",">
+            (
+            #{item.locationID},#{item.parentId},#{item.locationName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl},#{item.sensorPhysicalID},#{item.cnName},#{item.units},#{item.sensorPhysicalValue},#{item.timestamps}
+            )
+        </foreach>
+    </insert>
 
     <!--三峡保存空间数据插入数据库-->
-    <insert id="insertSanxiaData" parameterType="List">
+    <insert id="insertEnv" parameterType="List">
         INSERT IGNORE INTO sanxia_museum_levelInfor (envId, parentId, envName, envType, envTypeName, envCoverUrl)
         <foreach collection="sanxiaDataList" open="values" item="item" separator=",">
             (

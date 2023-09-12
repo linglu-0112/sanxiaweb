@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface DataDao {
-    public void insertSanxiaData(@Param("sanxiaDataList") List<SanxiaData> sanxiaDataList);
+    public void insertEnv(@Param("sanxiaDataList") List<SanxiaData> sanxiaDataList);
 
     public void insertEnvTypeMeta(@Param("table_name") String table_name,@Param("envTypeList") List<EnvTypeMeta> envTypeList);
 
@@ -24,5 +24,9 @@ public interface DataDao {
 
     public List<envLevel> selectEnvLevel(@Param("table_name") String table_name,@Param("envId") String envId);
 
+    public List<EnvData> selecEnvData(@Param("table_name") String table_name);
+
     public void insertRelicList(@Param("table_name") String table_name,@Param("relicList") List<RelicList> relicList);
+
+    public void insertSanxiaData(@Param("table_name") String table_name,@Param("sxDataList") List<insertSXData> sxDataList);
 }

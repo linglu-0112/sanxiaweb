@@ -27,6 +27,66 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     private DataDao dd;
 
     @Override
+    public void insertSanxiaData(String select_table, String table_name) {
+        List<EnvData> EnvDatas = dd.selecEnvData(select_table);
+        List<insertSXData.DataBean> SxDataBean = new ArrayList<>();
+        insertSXData sxData = new insertSXData();
+        for(int i = 0; i < EnvDatas.size(); i++){
+            insertSXData.DataBean dataBean = new insertSXData.DataBean();
+            dataBean.setLocationID(EnvDatas.get(i).getEnvId());
+            dataBean.setParentId(EnvDatas.get(i).getParentId());
+            dataBean.setLocationName(EnvDatas.get(i).getEnvName());
+            dataBean.setEnvType(EnvDatas.get(i).getEnvType());
+            dataBean.setEnvTypeName(EnvDatas.get(i).getEnvTypeName());
+            dataBean.setEnvCoverUrl(EnvDatas.get(i).getEnvCoverUrl());
+            dataBean.setTimestmaps(EnvDatas.get(i).getCollectTime());
+            String flag = EnvDatas.get(i).getEnvirParamType();
+            if(flag.equals("01")){
+                dataBean.setSensorPhysicalID("01");
+                dataBean.setSensorPhysicalValue(EnvDatas.get(i).getEnvirParamValue());
+                dataBean.setUnits("%");
+                dataBean.setCnName("湿度");
+            }else if(flag.equals("02")){
+                dataBean.setSensorPhysicalID("02");
+                dataBean.setSensorPhysicalValue(EnvDatas.get(i).getEnvirParamValue());
+                dataBean.setUnits("℃");
+                dataBean.setCnName("温度");
+            }
+            SxDataBean.add(dataBean);
+        }
+        sxData.setData(SxDataBean);
+        List<insertSXData> sxDataList = new ArrayList<>();
+        try {
+            for(int i = 0; i < sxData.getData().size(); i++){
+                insertSXData sxData_i = new insertSXData();
+                sxData_i = sxDataInsert(sxData,i);
+                sxDataList.add(sxData_i);
+            }
+            dd.insertSanxiaData(table_name, sxDataList);
+        } catch (Exception e) {
+            throw new RuntimeException("解析异常");
+        }
+    
+    }
+
+    private insertSXData sxDataInsert(insertSXData sxData, int i) {
+        insertSXData sanxiaData = new insertSXData();
+        sanxiaData.setLocationID(sxData.getData().get(i).getLocationID());
+        sanxiaData.setParentId(sxData.getData().get(i).getParentId());
+        sanxiaData.setLocationName(sxData.getData().get(i).getLocationName());
+        sanxiaData.setEnvType(sxData.getData().get(i).getEnvType());
+        sanxiaData.setEnvTypeName(sxData.getData().get(i).getEnvTypeName());
+        sanxiaData.setEnvCoverUrl(sxData.getData().get(i).getEnvCoverUrl());
+        sanxiaData.setTimestmaps(sxData.getData().get(i).getTimestmaps());
+        sanxiaData.setSensorPhysicalID(sxData.getData().get(i).getSensorPhysicalID());
+        sanxiaData.setSensorPhysicalValue(sxData.getData().get(i).getSensorPhysicalValue());
+        sanxiaData.setUnits(sxData.getData().get(i).getUnits());
+        sanxiaData.setCnName(sxData.getData().get(i).getCnName());
+
+        return sanxiaData;
+    }
+
+    @Override
     public void insertEnvData(String select_table, String table_name){
         List<SanxiaData> sData = dd.selectSanxia(select_table);
         JsonBean jsonBean = new JsonBean();
@@ -209,14 +269,14 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
 
 
     @Override
-    public void insertSanxiaData() {
+    public void insertEnv() {
         JsonBean jsonBean = new JsonBean();
         String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/findList?envId=";
         jsonBean = apiquery(url);
         List<SanxiaData> sanxiaDatalist = new ArrayList<>();
         if (jsonBean.getData().size() != 0) {
             sanxiaDatalist = getdatalist(jsonBean);
-            dd.insertSanxiaData(sanxiaDatalist);
+            dd.insertEnv(sanxiaDatalist);
             System.out.println("执行成功");
         } else {
             System.out.print(" 位置点无数据" + '\n');
@@ -558,5 +618,6 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
 
         return relicList;
     }
+    
 
 }

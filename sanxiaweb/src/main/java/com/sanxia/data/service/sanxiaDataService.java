@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 public interface sanxiaDataService {
 
-      void insertSanxiaData();
+      void insertEnv();
 
       void insertEnvTypeMeta(String Tablename);
 
@@ -18,5 +18,6 @@ public interface sanxiaDataService {
 
       void insertRelicData(String envId, String table_name);
 
+      void insertSanxiaData(String select_table, String table_name);
 
 }

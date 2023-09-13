@@ -106,5 +106,14 @@ public class sanxiaDataController {
             return "error";}
         return "输入三峡数据成功";
     }
+    @RequestMapping("/insertSanxiaEx/{table_name}/{envId}")
+    public String insertSanxiaEx(@PathVariable String table_name,@PathVariable String envId){
+        try {
+            sds.insertSanxiaEx(envId,table_name);
+        }catch(Exception e)
+        {   e.printStackTrace();
+            return "error";}
+        return "输入sanxia_exhibition成功";
+    }
 
 }

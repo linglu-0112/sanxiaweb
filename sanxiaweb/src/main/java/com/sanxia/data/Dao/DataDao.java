@@ -29,4 +29,6 @@ public interface DataDao {
     public void insertRelicList(@Param("table_name") String table_name,@Param("relicList") List<RelicList> relicList);
 
     public void insertSanxiaData(@Param("table_name") String table_name,@Param("sxDataList") List<insertSXData> sxDataList);
+
+    public void insertSanxiaExList(@Param("table_name") String table_name,@Param("sanxiaExhLists") List<sanxiaExh> sanxiaExhList);
 }

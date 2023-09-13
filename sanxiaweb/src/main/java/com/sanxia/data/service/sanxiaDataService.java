@@ -20,4 +20,6 @@ public interface sanxiaDataService {
 
       void insertSanxiaData(String select_table, String table_name);
 
+      void insertSanxiaEx(String envId, String table_name);
+
 }

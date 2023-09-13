@@ -15,6 +15,15 @@
     <select id="selectEnvLevel" resultType="com.sanxia.data.pojo.envLevel">
         SELECT DISTINCT envId, envName, envType FROM ${param1} where envId=${param2}
     </select>
+    <!-- 插入sanxia_exhibition表   -->
+    <insert id="insertSanxiaExList" parameterType="List">
+        INSERT IGNORE INTO ${param1} (locationID,locationName,texture,culturalRelicLevel,culturalRelicID)
+        <foreach collection="sanxiaExhLists" open="values" item="item" separator=",">
+            (
+            #{item.locationID},#{item.locationName},#{item.texture},#{item.culturalRelicLevel},#{item.culturalRelicID}
+            )
+        </foreach>
+    </insert>
     <!-- 插入Sanxia_Data表 -->
     <insert id="insertSanxiaData" parameterType="List">
         INSERT IGNORE INTO ${param1} (locationID,parentId,locationName,envType,envTypeName,envCoverUrl, sensorPhysicalID, cnName, units, sensorPhysicalValue, timestamps)

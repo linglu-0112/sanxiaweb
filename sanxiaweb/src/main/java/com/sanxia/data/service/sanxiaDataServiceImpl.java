@@ -26,6 +26,44 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
+// relicId->culturalRelicID; envId->locationID; envName->locationName;  relicTexture->texture; relicLevel->culturalRelicLevel
+    @Override
+    public void insertSanxiaEx(String envId, String table_name){
+        String table = "sanxia_museum_levelInfor";
+        List<envLevel> envLevels = dd.selectEnvLevel(table,envId);
+        JsonBean jsonBean = new JsonBean();
+        sanxiaExh sanxiaExh = new sanxiaExh();
+        List<sanxiaExh.DataBean> dataBeanList = new ArrayList<>();
+        String url = "http://111.207.242.123:9888/collection-plus/relicUnit/findList?page=1&size=10&envId=";
+        String Url = url + envId;
+        JSONObject json = new JSONObject();
+        json = fromurl(Url);
+        jsonBean.setMsg(json.optString("msg"));
+        jsonBean.setCode(json.optString("code"));
+        JSONObject data = json.optJSONObject("data");
+        JSONArray dataArray = data.optJSONArray("relicUnitList");
+        for(int i = 0; i < dataArray.size(); i++){
+            sanxiaExh.DataBean dataBean = new sanxiaExh.DataBean();
+            JSONObject data_i = dataArray.optJSONObject(i);
+            dataBean.setLocationID(envLevels.get(0).getEnvId());
+            dataBean.setLocationName(envLevels.get(0).getEnvName());
+            dataBean.setCulturalRelicID(data_i.getString("relicId"));
+            dataBean.setTexture(data_i.getString("relicTexture"));
+            dataBean.setCulturalRelicLevel(data_i.getString("relicLevel"));
+
+            dataBeanList.add(dataBean);
+        }
+        sanxiaExh.setData(dataBeanList);
+        List<sanxiaExh> sanxiaExhLists = new ArrayList<>();
+        for(int i = 0 ; i < sanxiaExh.getData().size(); i++){
+            sanxiaExh sanxiaExh1 = new sanxiaExh();
+            sanxiaExh1 = sanxiaExhIsert(sanxiaExh,i);
+            sanxiaExhLists.add(sanxiaExh1);
+        }
+        System.out.println("数据插入到sanxia_exhibition中,一共"+sanxiaExhLists.size()+"条数据");
+        dd.insertSanxiaExList(table_name,sanxiaExhLists);
+    }
+
     @Override
     public void insertSanxiaData(String select_table, String table_name) {
         List<EnvData> EnvDatas = dd.selecEnvData(select_table);
@@ -614,6 +652,15 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
 
         return relicList;
     }
-    
+    public static sanxiaExh sanxiaExhIsert(sanxiaExh sanxiaExh, int i){
+        sanxiaExh sanxiaExh1 = new sanxiaExh();
+        sanxiaExh1.setLocationID(sanxiaExh.getData().get(i).getLocationID());
+        sanxiaExh1.setLocationName(sanxiaExh.getData().get(i).getLocationName());
+        sanxiaExh1.setTexture(sanxiaExh.getData().get(i).getTexture());
+        sanxiaExh1.setCulturalRelicID(sanxiaExh.getData().get(i).getCulturalRelicID());
+        sanxiaExh1.setCulturalRelicLevel(sanxiaExh.getData().get(i).getCulturalRelicLevel());
+
+        return sanxiaExh1;
+    }
 
 }

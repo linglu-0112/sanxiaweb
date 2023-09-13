@@ -42,13 +42,13 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
             dataBean.setTimestmaps(EnvDatas.get(i).getCollectTime());
             String flag = EnvDatas.get(i).getEnvirParamType();
             if(flag.equals("01")){
-                dataBean.setSensorPhysicalID("01");
-                dataBean.setSensorPhysicalValue(EnvDatas.get(i).getEnvirParamValue());
+                dataBean.setSensorPhysicalID("32");
+                dataBean.setSensorPhysicalValue(Double.parseDouble(EnvDatas.get(i).getEnvirParamValue()));
                 dataBean.setUnits("%");
                 dataBean.setCnName("湿度");
             }else if(flag.equals("02")){
-                dataBean.setSensorPhysicalID("02");
-                dataBean.setSensorPhysicalValue(EnvDatas.get(i).getEnvirParamValue());
+                dataBean.setSensorPhysicalID("33");
+                dataBean.setSensorPhysicalValue(Double.parseDouble(EnvDatas.get(i).getEnvirParamValue()));
                 dataBean.setUnits("℃");
                 dataBean.setCnName("温度");
             }

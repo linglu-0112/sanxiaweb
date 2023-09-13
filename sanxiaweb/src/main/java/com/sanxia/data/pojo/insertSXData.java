@@ -11,7 +11,7 @@ public class insertSXData {
     private String envCoverUrl;
     private String timestamps;
     private String sensorPhysicalID;
-    private String sensorPhysicalValue;
+    private double sensorPhysicalValue;
     private String units;
     private String cnName;
     public String getLocationID() {
@@ -62,10 +62,10 @@ public class insertSXData {
     public void setSensorPhysicalID(String sensorPhysicalID) {
         this.sensorPhysicalID = sensorPhysicalID;
     }
-    public String getSensorPhysicalValue() {
+    public double getSensorPhysicalValue() {
         return sensorPhysicalValue;
     }
-    public void setSensorPhysicalValue(String sensorPhysicalValue) {
+    public void setSensorPhysicalValue(double sensorPhysicalValue) {
         this.sensorPhysicalValue = sensorPhysicalValue;
     }
     public String getUnits() {
@@ -98,7 +98,7 @@ public class insertSXData {
         private String envCoverUrl;
         private String timestmaps;
         private String sensorPhysicalID;
-        private String sensorPhysicalValue;
+        private double sensorPhysicalValue;
         private String units;
         private String cnName;
         public String getLocationID() {
@@ -149,10 +149,10 @@ public class insertSXData {
         public void setSensorPhysicalID(String sensorPhysicalID) {
             this.sensorPhysicalID = sensorPhysicalID;
         }
-        public String getSensorPhysicalValue() {
+        public double getSensorPhysicalValue() {
             return sensorPhysicalValue;
         }
-        public void setSensorPhysicalValue(String sensorPhysicalValue) {
+        public void setSensorPhysicalValue(double sensorPhysicalValue) {
             this.sensorPhysicalValue = sensorPhysicalValue;
         }
         public String getUnits() {

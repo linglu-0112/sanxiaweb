@@ -26,6 +26,23 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
+    // 插入sanxia_museum_levelInfo
+    @Override
+    public void insertEnv(String Tablename) {
+        JsonBean jsonBean = new JsonBean();
+        String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/findList?envId=";
+        jsonBean = apiquery(url);
+        List<SanxiaData> sanxiaDatalist = new ArrayList<>();
+        if (jsonBean.getData().size() != 0) {
+            sanxiaDatalist = getdatalist(jsonBean);
+            dd.insertEnv(Tablename,sanxiaDatalist);
+            System.out.println("执行成功");
+        } else {
+            System.out.print(" 位置点无数据" + '\n');
+        }
+
+    }
+
 // 插入sanxia_exihibition
     @Override
     public void insertSanxiaEx(String envId, String table_name){
@@ -323,22 +340,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
 
     }
 
-// 插入sanxia_museum_levelInfor
-    @Override
-    public void insertEnv() {
-        JsonBean jsonBean = new JsonBean();
-        String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/findList?envId=";
-        jsonBean = apiquery(url);
-        List<SanxiaData> sanxiaDatalist = new ArrayList<>();
-        if (jsonBean.getData().size() != 0) {
-            sanxiaDatalist = getdatalist(jsonBean);
-            dd.insertEnv(sanxiaDatalist);
-            System.out.println("执行成功");
-        } else {
-            System.out.print(" 位置点无数据" + '\n');
-        }
 
-    }
 
     public void insertEnvTypeMeta(String table_name) {
         JsonBean jsonBean = new JsonBean();

@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 public interface sanxiaDataService {
 
-      void insertEnv();
+      void insertEnv(String Tablename);
 
       void insertEnvTypeMeta(String Tablename);
 

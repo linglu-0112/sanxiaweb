@@ -40,7 +40,7 @@
 
     <!--三峡保存空间数据插入数据库-->
     <insert id="insertEnv" parameterType="List">
-        INSERT IGNORE INTO sanxia_museum_levelInfor (num, parentID, cnName, envType, envTypeName, envCoverUrl)
+        INSERT IGNORE INTO ${param1} (num, parentID, cnName, envType, envTypeName, envCoverUrl)
         <foreach collection="sanxiaDataList" open="values" item="item" separator=",">
             (
             #{item.envId},#{item.parentId},#{item.envName},#{item.envType},#{item.envTypeName},#{item.envCoverUrl}

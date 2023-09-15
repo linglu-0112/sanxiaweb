@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface DataDao {
-    public void insertEnv(@Param("sanxiaDataList") List<SanxiaData> sanxiaDataList);
+    public void insertEnv(@Param("table_name") String table_name,@Param("sanxiaDataList") List<SanxiaData> sanxiaDataList);
 
     public void insertEnvTypeMeta(@Param("table_name") String table_name,@Param("envTypeList") List<EnvTypeMeta> envTypeList);
 

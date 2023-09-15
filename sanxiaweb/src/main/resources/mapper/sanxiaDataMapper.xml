@@ -3,6 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sanxia.data.Dao.DataDao">
+    <!-- 查询sanxia_levelinfo   -->
+    <select id="selectSanxiaLevel" resultType="com.sanxia.data.pojo.sanxiaLevel">
+        SELECT DISTINCT num, cnName, parentID FROM ${param1}
+    </select>
     <!-- 查询保存环境温湿度数据 -->
     <select id="selecEnvData" resultType="com.sanxia.data.pojo.EnvData">
         SELECT DISTINCT envId, parentId, envName, envType, envTypeName, envCoverUrl,collectTime,envirParamType,envirParamValue FROM ${param1}

@@ -69,31 +69,50 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     // 插入sanxia_Data
     @Override
     public void insertSanxiaData(String select_table, String table_name) {
-        List<EnvData> EnvDatas = dd.selecEnvData(select_table);
+        List<sanxiaLevel> sanxiaLevels = dd.selectSanxiaLevel(select_table);
         List<insertSXData.DataBean> SxDataBean = new ArrayList<>();
         insertSXData sxData = new insertSXData();
-        for(int i = 0; i < EnvDatas.size(); i++){
-            insertSXData.DataBean dataBean = new insertSXData.DataBean();
-            dataBean.setLocationID(EnvDatas.get(i).getEnvId());
-            dataBean.setParentId(EnvDatas.get(i).getParentId());
-            dataBean.setLocationName(EnvDatas.get(i).getEnvName());
-            dataBean.setEnvType(EnvDatas.get(i).getEnvType());
-            dataBean.setEnvTypeName(EnvDatas.get(i).getEnvTypeName());
-            dataBean.setEnvCoverUrl(EnvDatas.get(i).getEnvCoverUrl());
-            dataBean.setTimestmaps(EnvDatas.get(i).getCollectTime());
-            String flag = EnvDatas.get(i).getEnvirParamType();
-            if(flag.equals("01")){
-                dataBean.setSensorPhysicalID("32");
-                dataBean.setSensorPhysicalValue(Double.parseDouble(EnvDatas.get(i).getEnvirParamValue()));
-                dataBean.setUnits("%");
-                dataBean.setCnName("湿度");
-            }else if(flag.equals("02")){
-                dataBean.setSensorPhysicalID("33");
-                dataBean.setSensorPhysicalValue(Double.parseDouble(EnvDatas.get(i).getEnvirParamValue()));
-                dataBean.setUnits("℃");
-                dataBean.setCnName("温度");
-            }
-            SxDataBean.add(dataBean);
+        for(int i = 0; i < sanxiaLevels.size(); i++){
+            String s = sanxiaLevels.get(i).getNum();
+            String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/data?envId=";
+            JSONObject json = new JSONObject();
+            String Url = url + s + "&startDateTime=2023-09-12%2001:00:00";
+            json = fromurl(Url);
+            // 获取外层data
+            JSONObject dataobj = json.optJSONObject("data");
+            //获取内层data
+            JSONArray dataArray = dataobj.optJSONArray("data");
+            if(dataArray.size() == 0){
+                System.out.println("保存空间中的数据为空");
+            }else{
+                System.out.println("保存空间中的数据不为空");
+                // 根据dataArray的大小进行循环插入数据：
+                for (int j = 0; j < dataArray.size(); j++){
+                    insertSXData.DataBean dataBean = new insertSXData.DataBean();
+                    JSONObject dataobj_i = dataArray.optJSONObject(j);
+                    dataBean.setLocationID(dataobj.optString("envId"));
+                    dataBean.setParentId(dataobj.optString("parentId"));
+                    dataBean.setLocationName(dataobj.optString("envName"));
+                    dataBean.setEnvType(dataobj.optString("envType"));
+                    dataBean.setEnvTypeName(dataobj.optString("envTypeName"));
+                    dataBean.setEnvCoverUrl(dataobj.optString("envCoverUrl"));
+                    dataBean.setTimestmaps(dataobj_i.optString("collectTime"));
+                    String flag = dataobj_i.optString("envirParamType");
+                    if(flag.equals("01")){
+                        dataBean.setSensorPhysicalID("32");
+                        dataBean.setSensorPhysicalValue(Double.parseDouble(dataobj_i.optString("envirParamValue")));
+                        dataBean.setUnits("%");
+                        dataBean.setCnName("湿度");
+                    }else if(flag.equals("02")){
+                        dataBean.setSensorPhysicalID("33");
+                        dataBean.setSensorPhysicalValue(Double.parseDouble(dataobj_i.optString("envirParamValue")));
+                        dataBean.setUnits("℃");
+                        dataBean.setCnName("温度");
+                    }
+                    SxDataBean.add(dataBean);
+                }
+                }
+
         }
         sxData.setData(SxDataBean);
         List<insertSXData> sxDataList = new ArrayList<>();
@@ -133,7 +152,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
 //            System.out.println(s);
             String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/data?envId=";
             JSONObject json = new JSONObject();
-            String Url = url + s;
+            String Url = url + s + "&startDateTime=2023-09-08%2001:00:00";
             json = fromurl(Url);
             jsonBean.setMsg(json.optString("msg"));
             jsonBean.setCode(json.optString("code"));

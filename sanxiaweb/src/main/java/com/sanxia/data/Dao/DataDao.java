@@ -24,6 +24,8 @@ public interface DataDao {
 
     public List<envLevel> selectEnvLevel(@Param("table_name") String table_name,@Param("envId") String envId);
 
+    public List<sanxiaLevel> selectSanxiaLevel(@Param("table_name") String table_name);
+
     public List<EnvData> selecEnvData(@Param("table_name") String table_name);
 
     public void insertRelicList(@Param("table_name") String table_name,@Param("relicList") List<RelicList> relicList);

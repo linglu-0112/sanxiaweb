@@ -13,14 +13,14 @@
     </select>
     <!-- 按照envId查询  -->
     <select id="selectEnvLevel" resultType="com.sanxia.data.pojo.envLevel">
-        SELECT DISTINCT envId, envName, envType FROM ${param1} where envId=${param2}
+        SELECT DISTINCT num, cnName, parentID FROM ${param1} where num=${param2}
     </select>
     <!-- 插入sanxia_exhibition表   -->
     <insert id="insertSanxiaExList" parameterType="List">
-        INSERT IGNORE INTO ${param1} (locationID,locationName,texture,culturalRelicLevel,culturalRelicID)
+        INSERT IGNORE INTO ${param1} (locationID,locationName,texture,culturalRelicLevel,culturalRelicID,zoneID,culturalRelic)
         <foreach collection="sanxiaExhLists" open="values" item="item" separator=",">
             (
-            #{item.locationID},#{item.locationName},#{item.texture},#{item.culturalRelicLevel},#{item.culturalRelicID}
+            #{item.locationID},#{item.locationName},#{item.texture},#{item.culturalRelicLevel},#{item.culturalRelicID},#{item.zoneID},#{item.culturalRelic}
             )
         </foreach>
     </insert>

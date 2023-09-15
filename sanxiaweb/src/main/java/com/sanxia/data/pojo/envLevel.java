@@ -1,33 +1,35 @@
 package com.sanxia.data.pojo;
 
 public class envLevel {
-    private String envId;
+    private String num; //envId
 
-    private String envName;
+    private String cnName; //envName
 
-    private String envType;
+    private String parentID; //parentId
 
-    public String getEnvId() {
-        return envId;
+    public String getNum() {
+        return num;
     }
 
-    public void setEnvId(String envId) {
-        this.envId = envId;
+    public void setNum(String num) {
+        this.num = num;
     }
 
-    public String getEnvName() {
-        return envName;
+    public String getCnName() {
+        return cnName;
     }
 
-    public void setEnvName(String envName) {
-        this.envName = envName;
+    public void setCnName(String cnName) {
+        this.cnName = cnName;
     }
 
-    public String getEnvType() {
-        return envType;
+    public String getParentID() {
+        return parentID;
     }
 
-    public void setEnvType(String envType) {
-        this.envType = envType;
+    public void setParentID(String parentID) {
+        this.parentID = parentID;
     }
+
+    
 }

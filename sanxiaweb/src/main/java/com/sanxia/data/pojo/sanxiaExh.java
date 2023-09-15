@@ -8,6 +8,24 @@ public class sanxiaExh {
     private String culturalRelicID;
     private String texture;
     private String culturalRelicLevel;
+    private String culturalRelic;
+    private String zoneID;
+    public String getCulturalRelic() {
+        return culturalRelic;
+    }
+
+    public void setCulturalRelic(String culturalRelic) {
+        this.culturalRelic = culturalRelic;
+    }
+
+    public String getZoneID() {
+        return zoneID;
+    }
+
+    public void setZoneID(String zoneID) {
+        this.zoneID = zoneID;
+    }
+
     private List<DataBean> data;
 
     public List<DataBean> getData() {
@@ -64,6 +82,23 @@ public class sanxiaExh {
         private String culturalRelicID;
         private String texture;
         private String culturalRelicLevel;
+        private String culturalRelic;
+        private String zoneID;
+        public String getCulturalRelic() {
+            return culturalRelic;
+        }
+
+        public void setCulturalRelic(String culturalRelic) {
+            this.culturalRelic = culturalRelic;
+        }
+
+        public String getZoneID() {
+            return zoneID;
+        }
+
+        public void setZoneID(String zoneID) {
+            this.zoneID = zoneID;
+        }
 
         public String getLocationID() {
             return locationID;

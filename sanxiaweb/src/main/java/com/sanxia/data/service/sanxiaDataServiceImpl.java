@@ -30,7 +30,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Override
     public void insertSanxiaEx(String envId, String table_name){
         String table = "sanxia_museum_levelInfor";
-        List<envLevel> envLevels = dd.selectEnvLevel(table,envId);
+        List<envLevel> envLevels = dd.selectEnvLevel(table,envId); //envId就是num
         JsonBean jsonBean = new JsonBean();
         sanxiaExh sanxiaExh = new sanxiaExh();
         List<sanxiaExh.DataBean> dataBeanList = new ArrayList<>();
@@ -45,9 +45,11 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         for(int i = 0; i < dataArray.size(); i++){
             sanxiaExh.DataBean dataBean = new sanxiaExh.DataBean();
             JSONObject data_i = dataArray.optJSONObject(i);
-            dataBean.setLocationID(envLevels.get(0).getEnvId());
-            dataBean.setLocationName(envLevels.get(0).getEnvName());
-            dataBean.setCulturalRelicID(data_i.getString("relicId"));
+            dataBean.setLocationID(envLevels.get(0).getNum());
+            dataBean.setLocationName(envLevels.get(0).getCnName());
+            dataBean.setZoneID(envLevels.get(0).getParentID());
+            dataBean.setCulturalRelic(data_i.getString("relicName"));
+            dataBean.setCulturalRelicID(data_i.getString("relicId"));   
             dataBean.setTexture(data_i.getString("relicTexture"));
             dataBean.setCulturalRelicLevel(data_i.getString("relicLevel"));
 
@@ -272,9 +274,9 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
             dataBean.setRelicTexture(data_i.getString("relicTexture"));
             dataBean.setRelicState(data_i.getString("relicState"));
             dataBean.setRelicImage(data_i.getString("relicImage"));
-            dataBean.setEnvId(envLevels.get(0).getEnvId());
-            dataBean.setEnvName(envLevels.get(0).getEnvName());
-            dataBean.setEnvType(envLevels.get(0).getEnvType());
+            dataBean.setEnvId(envLevels.get(0).getNum());
+            dataBean.setEnvName(envLevels.get(0).getCnName());
+            // dataBean.setEnvType(envLevels.get(0).getEnvType()); // envLevel中没有envType
 
             dataBeanList.add(dataBean);
 
@@ -659,6 +661,8 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         sanxiaExh1.setTexture(sanxiaExh.getData().get(i).getTexture());
         sanxiaExh1.setCulturalRelicID(sanxiaExh.getData().get(i).getCulturalRelicID());
         sanxiaExh1.setCulturalRelicLevel(sanxiaExh.getData().get(i).getCulturalRelicLevel());
+        sanxiaExh1.setZoneID(sanxiaExh.getData().get(i).getZoneID());
+        sanxiaExh1.setCulturalRelic(sanxiaExh.getData().get(i).getCulturalRelic());
 
         return sanxiaExh1;
     }

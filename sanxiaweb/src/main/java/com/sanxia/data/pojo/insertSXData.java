@@ -14,6 +14,20 @@ public class insertSXData {
     private double sensorPhysicalValue;
     private String units;
     private String cnName;
+    private String zoneID;
+    private String culturalRelic;
+    public String getZoneID() {
+        return zoneID;
+    }
+    public void setZoneID(String zoneID) {
+        this.zoneID = zoneID;
+    }
+    public String getCulturalRelic() {
+        return culturalRelic;
+    }
+    public void setCulturalRelic(String culturalRelic) {
+        this.culturalRelic = culturalRelic;
+    }
     public String getLocationID() {
         return locationID;
     }
@@ -101,6 +115,20 @@ public class insertSXData {
         private double sensorPhysicalValue;
         private String units;
         private String cnName;
+        private String zoneID;
+        private String culturalRelic;
+        public String getZoneID() {
+            return zoneID;
+        }
+        public void setZoneID(String zoneID) {
+            this.zoneID = zoneID;
+        }
+        public String getCulturalRelic() {
+            return culturalRelic;
+        }
+        public void setCulturalRelic(String culturalRelic) {
+            this.culturalRelic = culturalRelic;
+        }
         public String getLocationID() {
             return locationID;
         }

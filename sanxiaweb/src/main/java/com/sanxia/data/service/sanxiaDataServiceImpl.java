@@ -93,7 +93,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
             String s = sanxiaLevels.get(i).getNum();
             String url = "http://111.207.242.123:10081/api/v1/iot/50010301/env/data?envId=";
             JSONObject json = new JSONObject();
-            String Url = url + s + "&startDateTime=2023-09-12%2001:00:00";
+            String Url = url + s + "&startDateTime=2023-09-01%2001:00:00";
             json = fromurl(Url);
             // 获取外层data
             JSONObject dataobj = json.optJSONObject("data");

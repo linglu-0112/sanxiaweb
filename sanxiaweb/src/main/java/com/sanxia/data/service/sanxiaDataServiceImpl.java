@@ -26,7 +26,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
     @Autowired
     private DataDao dd;
 
-// relicId->culturalRelicID; envId->locationID; envName->locationName;  relicTexture->texture; relicLevel->culturalRelicLevel
+// 插入sanxia_exihibition
     @Override
     public void insertSanxiaEx(String envId, String table_name){
         String table = "sanxia_museum_levelInfor";
@@ -66,6 +66,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
         dd.insertSanxiaExList(table_name,sanxiaExhLists);
     }
 
+    // 插入sanxia_Data
     @Override
     public void insertSanxiaData(String select_table, String table_name) {
         List<EnvData> EnvDatas = dd.selecEnvData(select_table);
@@ -303,7 +304,7 @@ public class sanxiaDataServiceImpl implements sanxiaDataService {
 
     }
 
-
+// 插入sanxia_museum_levelInfor
     @Override
     public void insertEnv() {
         JsonBean jsonBean = new JsonBean();
